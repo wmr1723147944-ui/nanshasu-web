@@ -340,7 +340,7 @@
         <div class="metrics-grid">
             <div class="metric-card">
                 <div class="metric-title">今日殿前访客 (UV)</div>
-                <div class="metric-value">3,452</div>
+                <div class="metric-value">852</div>
                 <div class="metric-trend"><span style="font-size:1.2em">↑</span> 较昨日增加 12.5%</div>
             </div>
 
@@ -358,7 +358,7 @@
 
             <div class="metric-card">
                 <div class="metric-title">本月累计赏银 (预估金币)</div>
-                <div class="metric-value">¥89,200</div>
+                <div class="metric-value">¥29,200</div>
                 <div class="metric-trend"><span style="font-size:1.2em">↑</span> 势头良好稳步上升</div>
             </div>
         </div>
@@ -409,8 +409,8 @@
                     <tbody>
                         <tr>
                             <td>钮祜禄氏·婉儿</td>
-                            <td>万壑松风礼盒 x2</td>
-                            <td>¥ 396</td>
+                            <td>万壑松风礼盒 x1</td>
+                            <td>¥ 198</td>
                             <td><span class="status-tag status-ok">已发马车</span></td>
                         </tr>
                         <tr>
@@ -421,8 +421,8 @@
                         </tr>
                         <tr>
                             <td>王麻子</td>
-                            <td>养生山药酥 x3</td>
-                            <td>¥ 180</td>
+                            <td>养生山药酥 x2</td>
+                            <td>¥ 120</td>
                             <td><span class="status-tag status-wait">后厨赶制</span></td>
                         </tr>
                         <tr>
@@ -433,14 +433,14 @@
                         </tr>
                         <tr>
                             <td>江南四大才子</td>
-                            <td>文创盲盒 x4</td>
-                            <td>¥ 276</td>
+                            <td>文创盲盒 x2</td>
+                            <td>¥ 138</td>
                             <td><span class="status-tag status-wait">仓库配货</span></td>
                         </tr>
                         <tr>
                             <td>老佛爷</td>
-                            <td>南沙原味·初见 x10</td>
-                            <td>¥ 480</td>
+                            <td>南沙原味·初见 x5</td>
+                            <td>¥ 240</td>
                             <td><span class="status-tag status-ok">八百里加急</span></td>
                         </tr>
                     </tbody>
@@ -481,7 +481,7 @@
                     }
                 ],
                 yAxis: [
-                    { type: 'value', name: '人次', min: 0, max: 5000, interval: 1000 },
+                    { type: 'value', name: '人次', min: 0, max: 1000, interval: 200 },
                     { type: 'value', name: '时长(s)', min: 0, max: 600, interval: 120 }
                 ],
                 series: [
@@ -489,7 +489,7 @@
                         name: '访问人数(UV)',
                         type: 'bar',
                         barWidth: '40%',
-                        data: [2100, 2400, 1800, 3200, 3800, 2900, 3452],
+                        data: [210, 240, 180, 320, 380, 290, 852],
                         itemStyle: { borderRadius: [4, 4, 0, 0] }
                     },
                     {
@@ -523,11 +523,11 @@
                         },
                         labelLine: { show: false },
                         data: [
-                            { value: 1048, name: '南沙原味' },
-                            { value: 735, name: '万壑松风礼盒' },
-                            { value: 580, name: '桂花伴月' },
-                            { value: 484, name: '养生山药酥' },
-                            { value: 300, name: '文创盲盒' }
+                            { value: 104, name: '南沙原味' },
+                            { value: 73, name: '万壑松风礼盒' },
+                            { value: 58, name: '桂花伴月' },
+                            { value: 48, name: '养生山药酥' },
+                            { value: 30, name: '文创盲盒' }
                         ]
                     }
                 ]
@@ -545,13 +545,13 @@
                 },
                 yAxis: {
                     type: 'category',
-                    data: ['知乎文章', '微信朋友圈', '小红书种草', 'B站视频', '微信公众号推文', '搜索引擎(直接搜)']
+                    data: ['知乎文章', '微信朋友圈', '小红书种草', '微信视频号', '抖音视频', '搜索引擎(直接搜)']
                 },
                 series: [
                     {
                         name: '访问来源',
                         type: 'bar',
-                        data: [120, 302, 530, 890, 1040, 1620],
+                        data: [12, 30, 53, 89, 104, 162],
                         itemStyle: { borderRadius: [0, 4, 4, 0] }
                     }
                 ]
@@ -586,7 +586,7 @@
                             ])
                         },
                         lineStyle: { width: 3 },
-                        data: [120, 80, 50, 400, 1200, 2300, 3100, 2800, 2400, 2900, 3500, 1800]
+                        data: [12, 8, 5, 40, 120, 230, 310, 280, 240, 290, 350, 180]
                     }
                 ]
             });
