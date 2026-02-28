@@ -223,6 +223,58 @@
             height: 350px;
         }
 
+        /* 数据表格样式 */
+        .data-table-container {
+            background: var(--card-bg);
+            border: 1px solid var(--honey-gold);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .data-table th {
+            padding: 12px 15px;
+            border-bottom: 2px solid var(--honey-gold);
+            color: var(--royal-red);
+            font-weight: bold;
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px dashed rgba(192, 161, 107, 0.4);
+            color: var(--dark-text);
+        }
+
+        .data-table tbody tr:hover {
+            background-color: var(--rice-paper);
+        }
+
+        .status-tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: white;
+        }
+
+        .status-ok {
+            background: #5c6e58;
+        }
+
+        /* 绿 */
+        .status-wait {
+            background: #D48C70;
+        }
+
+        /* 橙 */
+
 
         /* =========================================
            4. 页脚
@@ -331,6 +383,68 @@
             <div class="chart-container">
                 <div class="chart-header">客官访问来源分布 (引流渠道分析)</div>
                 <div id="barChart" class="chart-box" style="height: 300px;"></div>
+            </div>
+        </div>
+
+        <!-- 本次新增：专用折线图 与 明细数据表 -->
+        <div class="charts-grid" style="margin-top: 25px;">
+            <!-- 新增纯折线图：近12时辰营收走势 -->
+            <div class="chart-container">
+                <div class="chart-header">近十二时辰御膳房营收走势 (折线图)</div>
+                <div id="revenueLineChart" class="chart-box"></div>
+            </div>
+
+            <!-- 新增明细数据表格 (Table) -->
+            <div class="data-table-container">
+                <div class="chart-header">今日最新御膳采买流水榜 (数据表)</div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>客官名讳</th>
+                            <th>采买御点</th>
+                            <th>赏银(元)</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>钮祜禄氏·婉儿</td>
+                            <td>万壑松风礼盒 x2</td>
+                            <td>¥ 396</td>
+                            <td><span class="status-tag status-ok">已发马车</span></td>
+                        </tr>
+                        <tr>
+                            <td>富察氏·李刚</td>
+                            <td>南沙原味·初见 x1</td>
+                            <td>¥ 48</td>
+                            <td><span class="status-tag status-ok">已发马车</span></td>
+                        </tr>
+                        <tr>
+                            <td>王麻子</td>
+                            <td>养生山药酥 x3</td>
+                            <td>¥ 180</td>
+                            <td><span class="status-tag status-wait">后厨赶制</span></td>
+                        </tr>
+                        <tr>
+                            <td>神秘剑客</td>
+                            <td>桂花伴月 x1</td>
+                            <td>¥ 58</td>
+                            <td><span class="status-tag status-ok">已发马车</span></td>
+                        </tr>
+                        <tr>
+                            <td>江南四大才子</td>
+                            <td>文创盲盒 x4</td>
+                            <td>¥ 276</td>
+                            <td><span class="status-tag status-wait">仓库配货</span></td>
+                        </tr>
+                        <tr>
+                            <td>老佛爷</td>
+                            <td>南沙原味·初见 x10</td>
+                            <td>¥ 480</td>
+                            <td><span class="status-tag status-ok">八百里加急</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -443,11 +557,46 @@
                 ]
             });
 
+            // 4. 初始化新增的纯折线图 (营收走势)
+            const revenueLineChart = echarts.init(document.getElementById('revenueLineChart'));
+            revenueLineChart.setOption({
+                color: ['#D48C70'], // 选个亮橙色
+                tooltip: {
+                    trigger: 'axis'
+                },
+                grid: { left: '4%', right: '4%', bottom: '8%', containLabel: true },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时']
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '赏银(元)'
+                },
+                series: [
+                    {
+                        name: '当个时辰营收',
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: 'rgba(212, 140, 112, 0.8)' },
+                                { offset: 1, color: 'rgba(212, 140, 112, 0.1)' }
+                            ])
+                        },
+                        lineStyle: { width: 3 },
+                        data: [120, 80, 50, 400, 1200, 2300, 3100, 2800, 2400, 2900, 3500, 1800]
+                    }
+                ]
+            });
+
             // 监听窗口大小改变，自适应图表
             window.addEventListener('resize', () => {
                 trendChart.resize();
                 pieChart.resize();
                 barChart.resize();
+                revenueLineChart.resize();
             });
         }
     </script>
