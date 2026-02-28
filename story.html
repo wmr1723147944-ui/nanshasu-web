@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百年非遗志 | 南沙酥</title>
+    <style>
+        /* =========================================
+           1. 核心配色与基础样式 (保持一致)
+        ========================================= */
+        :root {
+            --royal-red: #9A3B3B; --honey-gold: #C0A16B; --rice-paper: #F7F4EF;
+            --ink-gray: rgba(60, 60, 60, 0.08); --dark-text: #4A3F35;
+            --shadow: 0 8px 20px rgba(154, 59, 59, 0.15);
+        }
+        body {
+            margin: 0; 
+            font-family: "Noto Serif SC", serif;
+            color: var(--dark-text); 
+            overflow-x: hidden;
+            
+            /* ▼▼▼▼▼ 背景图核心设置 ▼▼▼▼▼ */
+            /* 替换为你保存的图片路径 */
+            background-image: url('bg-decoration.png'); 
+            
+            /* 让背景图固定不动，产生高级的视差滚动效果 */
+            background-attachment: fixed; 
+            
+            /* 让图片铺满屏幕，并居中显示 */
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            /* ▲▲▲▲▲ 设置结束 ▲▲▲▲▲ */
+        }
+        
+        a { text-decoration: none; color: inherit; transition: 0.4s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* 导航栏样式 */
+        header {
+            background: rgba(247, 244, 239, 0.98); padding: 0 5%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            border-bottom: 2px solid var(--honey-gold); box-shadow: 0 4px 15px rgba(192, 161, 107, 0.2); box-sizing: border-box;
+        }
+        .logo { font-size: 1.8rem; font-weight: bold; color: var(--royal-red); border: 3px double var(--honey-gold); padding: 5px 18px; border-radius: 4px; letter-spacing: 3px; background: white; }
+        .desktop-nav { display: flex; gap: 35px; align-items: center; }
+        .desktop-nav > li a:hover { color: var(--royal-red); }
+        .dropdown-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(10px); background: white; min-width: 170px; box-shadow: var(--shadow); border: 1px solid var(--honey-gold); border-top: 3px solid var(--royal-red); opacity: 0; visibility: hidden; transition: 0.3s; border-radius: 0 0 8px 8px; z-index: 1001; }
+        .desktop-nav > li:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .dropdown-menu li a { display: block; padding: 12px 20px; border-bottom: 1px dashed #eee; font-size: 0.95rem; }
+        
+        .mobile-toggle { display: none; font-size: 1.8rem; color: var(--royal-red); cursor: pointer; }
+        .mobile-nav { position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100vh; background: var(--rice-paper); border-left: 3px solid var(--honey-gold); padding: 80px 30px; transition: 0.4s; z-index: 999; }
+        .mobile-nav.active { right: 0; }
+        .mobile-nav li a { display: block; padding: 15px 0; border-bottom: 1px solid rgba(192, 161, 107, 0.3); }
+
+        /* =========================================
+           3. 故事页专属样式
+        ========================================= */
+         main { 
+            padding-top: 40px; /* 调整一下内边距 */
+            width: 90%; 
+            max-width: 1000px; 
+            margin: 120px auto 100px; /* 保持居中 */
+            
+            /* ▼▼▼▼▼ 新增：内容区白底设置 ▼▼▼▼▼ */
+            /* 使用米纸色作为底色，遮住背景图中间的部分 */
+            background-color: rgba(247, 244, 239, 0.95); 
+            
+            /* 加一点阴影，让内容区看起来是浮在背景图上的 */
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            
+            /* 给内容区内部加点呼吸空间 */
+            padding: 40px;
+            border-radius: 8px; /*稍微加点圆角更柔和*/
+            /* ▲▲▲▲▲ 设置结束 ▲▲▲▲▲ */
+        }
+        
+        .story-container { width: 90%; max-width: 800px; margin: 0 auto; }
+
+        .story-header { text-align: center; margin-bottom: 60px; border-bottom: 1px solid var(--honey-gold); padding-bottom: 20px; }
+        .story-header h1 { font-size: 2.8rem; color: var(--royal-red); margin-bottom: 10px; }
+        
+        /* 时间轴 */
+        .timeline { position: relative; padding-left: 40px; margin-bottom: 100px; }
+        .timeline::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 0; width: 4px; background: var(--honey-gold); border-radius: 2px; opacity: 0.6; }
+        .timeline-item { position: relative; margin-bottom: 60px; background: rgba(255,255,255,0.8); padding: 25px; border-radius: 8px; border: 1px solid rgba(192, 161, 107, 0.3); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .timeline-item::before { content: ''; position: absolute; left: -49px; top: 20px; width: 16px; height: 16px; border-radius: 50%; background: var(--royal-red); border: 3px solid white; box-shadow: 0 0 0 2px var(--honey-gold); }
+        .year-tag { display: inline-block; background: var(--royal-red); color: var(--honey-gold); padding: 5px 15px; border-radius: 20px; font-weight: bold; margin-bottom: 15px; }
+        .timeline-item h3 { font-size: 1.5rem; margin-top: 0; margin-bottom: 10px; }
+        .timeline-img { margin-top: 15px; border-radius: 4px; border: 5px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        /* =========================================
+           4. 新增：横向品控流程图板块
+        ========================================= */
+        .qc-section {
+            width: 100vw; 
+            margin-left: calc(-50vw + 50%); /* 强制全屏宽 */
+            background: linear-gradient(to bottom, transparent, rgba(192, 161, 107, 0.1) 20%, rgba(192, 161, 107, 0.1) 80%, transparent);
+            padding: 60px 0;
+            margin-top: 50px;
+        }
+
+        .qc-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .qc-header { text-align: center; margin-bottom: 50px; }
+        .qc-header h2 { font-size: 2.2rem; color: var(--royal-red); margin-bottom: 10px; }
+        .qc-header span { color: var(--honey-gold); font-style: italic; letter-spacing: 2px; }
+
+        /* 横向滚动容器 (手机端适配) */
+        .qc-scroll-wrapper {
+            overflow-x: auto;
+            padding: 20px 10px 40px; /* 底部留空间给阴影 */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .qc-flow-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            min-width: 1000px; /* 保证PC端布局不挤压，手机端可滑动 */
+        }
+
+        /* 贯穿进度条 */
+        .progress-line-bg { position: absolute; top: 140px; left: 50px; right: 50px; height: 2px; background: #e0e0e0; z-index: 0; }
+        .progress-line-active { position: absolute; top: 140px; left: 50px; right: 150px; height: 2px; background: var(--honey-gold); z-index: 0; }
+
+        /* 卡片样式 */
+        .qc-card {
+            width: 240px; position: relative; z-index: 1;
+            background: white; padding: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border-radius: 4px; border-bottom: 4px solid var(--royal-red);
+            transition: transform 0.3s;
+        }
+        .qc-card:hover { transform: translateY(-10px); }
+
+        .qc-img-box {
+            width: 100%; height: 160px; background: #eee; margin-bottom: 15px;
+            overflow: hidden; border-radius: 2px; position: relative;
+        }
+        .qc-img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .qc-card:hover .qc-img-box img { transform: scale(1.1); }
+
+        .qc-step-badge {
+            position: absolute; top: -10px; left: -10px; width: 40px; height: 40px;
+            background: var(--royal-red); color: var(--honey-gold); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 18px; border: 2px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 2;
+        }
+
+        .qc-card-title { font-size: 18px; color: #333; font-weight: bold; margin-bottom: 8px; }
+        .qc-card-desc { font-size: 13px; color: #666; line-height: 1.6; text-align: justify; }
+
+        .qc-arrow { font-size: 24px; color: var(--honey-gold); margin-top: 130px; font-weight: bold; }
+
+        /* 底部 */
+        footer { background: #2A1F1F; color: #999; padding: 4rem 5%; text-align: center; border-top: 4px solid var(--honey-gold); width: 100vw; margin-left: calc(-50vw + 50%); }
+        @media (max-width: 768px) { .desktop-nav { display: none; } .mobile-toggle { display: block; } }
+    </style>
+</head>
+<body>
+    <header>
+    <a href="index.html" class="logo">南沙酥</a>
+    <ul class="desktop-nav">
+        <li><a href="index.html">首页·御苑</a></li>
+        
+        <li>
+            <a href="products.html">御膳房·点心局 ▾</a>
+            <ul class="dropdown-menu">
+                <li><a href="products.html#gift">国潮礼盒 (赐礼)</a></li>
+                <li><a href="products.html#daily">日常茶点 (自享)</a></li>
+                <li><a href="products.html#health">轻盈养生 (清减)</a></li>
+            </ul>
+        </li>
+
+        <li><a href="story.html" style="color:var(--royal-red);">百年·非遗志</a></li>
+        <li><a href="campaign.html">御苑·雅集</a></li>
+        <li><a href="member.html">内务府·会员</a></li>
+    </ul>
+    <div class="mobile-toggle" onclick="toggleMobileMenu()">☰</div>
+</header>
+
+    <div class="mobile-nav" id="mobileNav">
+        <ul>
+            <li><a href="index.html">🏠 首页·御苑</a></li>
+            <li><a href="products.html">🎁 御膳房·点心局</a></li>
+            <li><a href="story.html">📜 百年·非遗志</a></li>
+            <li><a href="campaign.html">🎏 御苑·雅集</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <!-- 历史部分容器 -->
+        <div class="story-container">
+            <div class="story-header">
+                <h1>百年酥韵 · 匠心传承</h1>
+                <p>从宫廷御膳到非遗瑰宝，十八道工序的坚守</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="year-tag">清·道光年间</div>
+                    <h3>御膳房里的“油酥饽饽”</h3>
+                    <p>御厨刘德才在宫廷御膳房潜心研制，创出“水面包酥面”的绝技。酥皮薄如蝉翼，层次丰富，深得皇室喜爱，赐名“南沙酥”。</p>
+                    <img src="御膳房.png" class="timeline-img">
+                </div>
+                <div class="timeline-item">
+                    <div class="year-tag">2009年</div>
+                    <h3>荣膺省级非遗</h3>
+                    <p>经过数代人的口传心授，南沙酥制作技艺被正式列入河北省非物质文化遗产名录。这不仅是一块糕点，更是承德历史文化的活化石。</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="year-tag">今天</div>
+                    <h3>守正创新 · 利发糖饼厂</h3>
+                    <p>传承人秦连平创立“利发糖饼厂”，在坚持古法纯手工制作的同时，引入低糖健康理念。让这块三百年的宫廷点心，走入寻常百姓家。</p>
+                    <img src="手艺人.png" class="timeline-img">
+                </div>
+            </div>
+        </div>
+
+        <!-- 全链路品控流程图 (插入在这里) -->
+        <div class="qc-section">
+            <div class="qc-container">
+                <div class="qc-header">
+                    <h2>全链路 · 品质铁律</h2>
+                    <span>Quality Control Process</span>
+                </div>
+
+                <div class="qc-scroll-wrapper">
+                    <div class="qc-flow-row">
+                        <!-- 背景线 -->
+                        <div class="progress-line-bg"></div>
+                        <div class="progress-line-active"></div>
+
+                        <!-- 步骤 1 -->
+                        <div class="qc-card">
+                            <div class="qc-step-badge">1</div>
+                            <div class="qc-img-box">
+                                <img src="原料.jpg" alt="原料">
+                            </div>
+                            <div class="qc-card-title">甄选 · 溯源</div>
+                            <div class="qc-card-desc">严选承德本地高筋小麦与优质水源。坚持使用天然猪板油，拒绝人造奶油。</div>
+                        </div>
+
+                        <div class="qc-arrow">›</div>
+
+                        <!-- 步骤 2 -->
+                        <div class="qc-card">
+                            <div class="qc-step-badge">2</div>
+                            <div class="qc-img-box">
+                                <img src="包酥面.png" alt="制作">
+                            </div>
+                            <div class="qc-card-title">古法 · 精制</div>
+                            <div class="qc-card-desc">传承非遗“水面包酥面”技艺，十八道工序纯手工制作。</div>
+                        </div>
+
+                        <div class="qc-arrow">›</div>
+
+                        <!-- 步骤 3 -->
+                        <div class="qc-card">
+                            <div class="qc-step-badge">3</div>
+                            <div class="qc-img-box">
+                                <img src="检查.png" alt="质检">
+                            </div>
+                            <div class="qc-card-title">毫厘 · 严检</div>
+                            <div class="qc-card-desc">每一批次产品均经过严格理化指标检测，确保安全卫生零容忍。</div>
+                        </div>
+
+                        <div class="qc-arrow">›</div>
+
+                        <!-- 步骤 4 -->
+                        <div class="qc-card">
+                            <div class="qc-step-badge">4</div>
+                            <div class="qc-img-box">
+                                <img src="购买.png" alt="交付">
+                            </div>
+                            <div class="qc-card-title">自主 · 直营</div>
+                            <div class="qc-card-desc">产销一体化管理。从非遗工坊直接送达消费者手中，传递最新鲜的宫廷酥香。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div style="font-size: 1.5rem; color: var(--honey-gold); margin-bottom: 20px; font-weight: bold;">南沙酥</div>
+        <p>© 2025 平泉利发糖饼厂 | 河北省非物质文化遗产保护单位</p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileNav').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

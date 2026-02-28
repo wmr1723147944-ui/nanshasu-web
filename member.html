@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内务府·会员司 | 南沙酥</title>
+    <style>
+        /* =========================================
+           1. 核心配色 (保持统一)
+        ========================================= */
+        :root {
+            --royal-red: #9A3B3B; 
+            --deep-red: #682323;
+            --honey-gold: #C0A16B; 
+            --bright-gold: #E6CFA0;
+            --rice-paper: #F7F4EF;
+            --dark-text: #2A1F1F;
+            --shadow: 0 4px 15px rgba(42, 31, 31, 0.1);
+        }
+
+        body {
+            margin: 0; 
+            font-family: "Noto Serif SC", "Songti SC", serif;
+            background-color: #2A1F1F;
+            /* 增加更丰富的背景纹理 */
+            background-image: 
+                radial-gradient(var(--honey-gold) 1px, transparent 1px),
+                linear-gradient(to right, rgba(192, 161, 107, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px, 60px 60px;
+            color: var(--dark-text);
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* =========================================
+           2. 导航栏
+        ========================================= */
+        /* ▼▼▼▼▼▼ 复制这段样式，修复导航栏 ▼▼▼▼▼▼ */
+        header {
+            background: rgba(247, 244, 239, 0.98); 
+            padding: 0 5%; 
+            height: 80px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000;
+            border-bottom: 2px solid var(--honey-gold); 
+            box-shadow: 0 4px 15px rgba(192, 161, 107, 0.2); 
+            box-sizing: border-box;
+        }
+
+        .logo { 
+            font-size: 1.8rem; 
+            font-weight: bold; 
+            color: var(--royal-red); 
+            border: 3px double var(--honey-gold); 
+            padding: 5px 18px; 
+            border-radius: 4px; 
+            letter-spacing: 3px; 
+            background: white; 
+        }
+
+        .desktop-nav { display: flex; gap: 35px; align-items: center; }
+        .desktop-nav > li { position: relative; } /* 关键：确保下拉菜单位置对齐 */
+        .desktop-nav > li a { font-weight: 500; transition: 0.3s; }
+        .desktop-nav > li a:hover { color: var(--royal-red); }
+
+        /* ▼ 下拉菜单的核心样式（你之前缺少的） ▼ */
+        .dropdown-menu { 
+            position: absolute; 
+            top: 100%; 
+            left: 50%; 
+            transform: translateX(-50%) translateY(10px); 
+            background: white; 
+            min-width: 170px; 
+            box-shadow: var(--shadow); 
+            border: 1px solid var(--honey-gold); 
+            border-top: 3px solid var(--royal-red); 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: 0.3s; 
+            border-radius: 0 0 8px 8px; 
+            z-index: 1001; 
+        }
+        
+        .desktop-nav > li:hover .dropdown-menu { 
+            opacity: 1; 
+            visibility: visible; 
+            transform: translateX(-50%) translateY(0); 
+        }
+        
+        .dropdown-menu li a { 
+            display: block; 
+            padding: 12px 20px; 
+            font-size: 0.95rem; 
+            border-bottom: 1px dashed #eee; 
+            color: var(--dark-text) !important; /* 强制下拉菜单文字平时是深色 */
+        }
+        .dropdown-menu li a:hover {
+            background: var(--rice-paper);
+            color: var(--royal-red) !important;
+        }
+        /* ▲▲▲▲▲▲ 样式结束 ▲▲▲▲▲▲ */
+
+        /* =========================================
+           3. 主体布局 (核心修改：吸顶效果)
+        ========================================= */
+        main {
+            margin-top: 100px;
+            padding: 20px 2%; /* 减小边距，让内容更宽 */
+            padding-bottom: 80px;
+            max-width: 1600px; /* 增加最大宽度，适应大屏 */
+            margin-left: auto; 
+            margin-right: auto;
+        }
+
+        .royal-container {
+            display: grid;
+            grid-template-columns: 300px 1fr 320px; /* 调整侧栏宽度 */
+            gap: 25px;
+            position: relative;
+            align-items: start; /* 关键：防止侧栏自动拉伸 */
+        }
+
+        /* 通用卡片 */
+        .panel {
+            background: var(--rice-paper);
+            border: 1px solid var(--honey-gold);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .panel-title {
+            font-size: 1.1rem; color: var(--royal-red); font-weight: bold;
+            margin-bottom: 15px; border-bottom: 2px solid var(--honey-gold);
+            padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* =========================================
+           4. 左侧栏 (增加内容 + 吸顶)
+        ========================================= */
+        .sidebar-left { 
+            display: flex; flex-direction: column; 
+            /* 关键代码：吸顶效果 */
+            position: sticky; 
+            top: 100px; 
+            height: fit-content;
+        }
+
+        .waist-token {
+            background: linear-gradient(to bottom, #4A3F35, #2A1F1F);
+            color: var(--bright-gold);
+            text-align: center; padding: 30px 15px;
+            border-radius: 12px;
+            border: 4px solid var(--honey-gold);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            position: relative; overflow: hidden; margin-bottom: 20px;
+        }
+        .waist-token::after {
+            content: '御'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 120px; opacity: 0.1; font-family: "Kaiti SC", serif;
+        }
+        .user-avatar {
+            width: 80px; height: 80px; margin: 0 auto 15px; border-radius: 50%; border: 3px solid var(--honey-gold);
+            background: url('https://placehold.co/150x150/9A3B3B/fff?text=VIP') center/cover; position: relative; z-index: 2;
+        }
+        .token-title { font-size: 1.2rem; margin-bottom: 5px; font-weight: bold; z-index: 2; position: relative; }
+        .token-level { 
+            background: var(--royal-red); color: white; padding: 2px 10px; font-size: 0.8rem; 
+            border-radius: 4px; display: inline-block; margin-bottom: 20px; z-index: 2; position: relative; border: 1px solid var(--honey-gold);
+        }
+        .points-box { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; margin-top: 10px; z-index: 2; position: relative; }
+        .points-num { font-size: 2rem; font-weight: bold; color: var(--honey-gold); line-height: 1; }
+
+        .privilege-list li { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px dashed #ddd; font-size: 0.95rem; color: #555; }
+        
+        /* 客服卡片 */
+        .service-card {
+            background: #fff8e1; border: 1px dashed var(--honey-gold);
+            padding: 15px; border-radius: 8px; text-align: center;
+        }
+        .service-btn {
+            background: var(--royal-red); color: white; border: none; padding: 8px 20px;
+            border-radius: 20px; margin-top: 10px; cursor: pointer; width: 100%;
+        }
+
+        /* =========================================
+           5. 中间栏 (内容主体)
+        ========================================= */
+        .main-content { display: flex; flex-direction: column; }
+
+        .notice-board {
+            background: #fff8e1; color: #8a6d3b; padding: 10px 15px;
+            border-radius: 4px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;
+            border: 1px dashed #faebcc; margin-bottom: 20px;
+        }
+
+        .checkin-strip { display: flex; justify-content: space-between; gap: 8px; }
+        .day-box {
+            flex: 1; background: white; border: 1px solid #ddd; border-radius: 4px; padding: 12px 5px; text-align: center; cursor: pointer; transition: 0.3s;
+        }
+        .day-box.active { background: #fff8e1; border-color: var(--honey-gold); color: var(--royal-red); }
+        .day-box:hover { transform: translateY(-3px); border-color: var(--royal-red); }
+        
+        /* 增加商品列数，视觉更饱满 */
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
+        .shop-item {
+            background: white; border: 1px solid #eee; border-radius: 6px; overflow: hidden;
+            transition: 0.3s; position: relative;
+        }
+        .shop-item:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-color: var(--honey-gold); transform: translateY(-3px); }
+        .shop-img { height: 160px; width: 100%; object-fit: cover; }
+        .shop-info { padding: 12px; }
+        .shop-name { font-weight: bold; font-size: 1rem; margin-bottom: 5px; color: var(--dark-text); }
+        .shop-price { color: var(--royal-red); font-weight: bold; font-size: 1.1rem; }
+        .shop-btn {
+            display: block; width: 100%; background: var(--rice-paper); border: 1px solid var(--honey-gold);
+            color: var(--dark-text); padding: 8px; margin-top: 10px; cursor: pointer; transition: 0.3s;
+            font-weight: bold; border-radius: 4px;
+        }
+        .shop-btn:hover { background: var(--royal-red); color: white; border-color: var(--royal-red); }
+
+        /* =========================================
+           6. 右侧栏 (增加内容 + 吸顶)
+        ========================================= */
+        .sidebar-right { 
+            display: flex; flex-direction: column; 
+            /* 关键代码：吸顶效果 */
+            position: sticky; 
+            top: 100px; 
+            height: fit-content;
+        }
+
+        .task-card {
+            background: white; padding: 15px; border-radius: 6px; border-left: 4px solid var(--royal-red);
+            margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;
+        }
+        .btn-do { background: var(--honey-gold); color: white; border: none; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
+        .btn-do:hover { background: var(--royal-red); }
+
+        /* 新品预告卡片 */
+        .preview-card {
+            background: #2A1F1F; color: white; border-radius: 8px; overflow: hidden; margin-top: 10px;
+        }
+        .preview-img { width: 100%; height: 120px; object-fit: cover; opacity: 0.8; }
+        .preview-info { padding: 15px; text-align: center; }
+        .vote-btn { background: var(--honey-gold); border:none; padding: 5px 20px; border-radius: 20px; color: #2A1F1F; font-weight: bold; cursor: pointer; margin-top: 10px;}
+
+        footer { background: #2A1F1F; color: #999; padding: 4rem 5%; text-align: center; border-top: 4px solid var(--honey-gold); width: 100vw; margin-left: calc(-50vw + 50%); position: relative; z-index: 10;}
+
+        @media (max-width: 1024px) {
+            .royal-container { grid-template-columns: 1fr; }
+            /* 手机端取消吸顶，恢复流式布局 */
+            .sidebar-left, .sidebar-right { position: static; width: 100%; height: auto; }
+            .waist-token { border-radius: 12px; flex-direction: row; display: flex; align-items: center; justify-content: space-between; text-align: left; }
+            .user-avatar { margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <header>
+    <a href="index.html" class="logo">南沙酥</a>
+    <ul class="desktop-nav">
+        <li><a href="index.html">首页·御苑</a></li>
+        
+        <li>
+            <a href="products.html">御膳房·点心局 ▾</a>
+            <ul class="dropdown-menu">
+                <li><a href="products.html#gift">国潮礼盒 (赐礼)</a></li>
+                <li><a href="products.html#daily">日常茶点 (自享)</a></li>
+                <li><a href="products.html#health">轻盈养生 (清减)</a></li>
+            </ul>
+        </li>
+
+        <li><a href="story.html">百年·非遗志</a></li>
+        <li><a href="campaign.html">御苑·雅集</a></li>
+
+        <li><a href="member.html" style="color:var(--royal-red);">内务府·会员</a></li>
+        </ul>
+    <div class="mobile-toggle" onclick="toggleMobileMenu()">☰</div>
+</header>
+
+    <div class="mobile-nav" id="mobileNav">
+        <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="products.html">御膳房</a></li>
+            <li><a href="member.html">内务府·会员</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <div class="royal-container">
+            
+            <!-- 左栏：身份与权益 (吸顶) -->
+            <aside class="sidebar-left">
+                <!-- 用户的腰牌 -->
+                <div class="waist-token">
+                    <div>
+                        <div class="user-avatar"></div>
+                        <div class="token-title">爱吃酥的乾隆爷</div>
+                        <span class="token-level">御前一品 VIP</span>
+                    </div>
+                    <div class="points-box">
+                        <div class="points-num">888</div>
+                        <div style="font-size:0.8rem; opacity:0.8;">可用通宝</div>
+                    </div>
+                </div>
+
+                <!-- 权益列表 -->
+                <div class="panel">
+                    <div class="panel-title">我的特权</div>
+                    <ul class="privilege-list">
+                        <li><span style="color:var(--royal-red);">🎁</span> 生日当月享双倍积分</li>
+                        <li><span style="color:var(--royal-red);">🚀</span> 新品优先尝鲜权</li>
+                        <li><span style="color:var(--royal-red);">🚚</span> 每月一张免邮券</li>
+                        <li><span style="color:var(--royal-red);">👩‍🍳</span> 线下非遗课8折</li>
+                    </ul>
+                </div>
+
+                <!-- 客服卡片 (新增) -->
+                <div class="service-card">
+                    <h4 style="margin:0; color:var(--royal-red);">专属御前侍卫</h4>
+                    <p style="font-size:0.8rem; color:#666; margin:5px 0;">遇到问题？随时传唤</p>
+                    <button class="service-btn">联系客服</button>
+                </div>
+            </aside>
+
+            <!-- 中栏：核心互动区 -->
+            <section class="main-content">
+                
+                <!-- 皇榜公告 -->
+                <div class="notice-board">
+                    <span>📣 <b>内务府宣：</b></span>
+                    <marquee scrollamount="5">酥皮挑战赛火热进行中！参与即送50通宝；新品“低糖玫瑰酥”已入库，欢迎品尝。</marquee>
+                </div>
+
+                <!-- 每日点卯 -->
+                <div class="panel">
+                    <div class="panel-title">每日点卯 <span style="font-size:0.8rem; font-weight:normal; color:#666;">连续签到7天有惊喜</span></div>
+                    <div class="checkin-strip">
+                        <div class="day-box active">周一<br><span class="day-points">✓</span></div>
+                        <div class="day-box active">周二<br><span class="day-points">✓</span></div>
+                        <div class="day-box" onclick="alert('签到成功！+5通宝')">周三<br><span class="day-points">+5</span></div>
+                        <div class="day-box">周四<br><span class="day-points">+5</span></div>
+                        <div class="day-box">周五<br><span class="day-points">+5</span></div>
+                        <div class="day-box">周六<br><span class="day-points">+10</span></div>
+                        <div class="day-box" style="background:#fff3e0;">周日<br><span class="day-points">🎁</span></div>
+                    </div>
+                </div>
+
+                <!-- 赏赐库 (商品加量) -->
+                <div class="panel">
+                    <div class="panel-title">
+                        内务府赏赐库
+                        <a href="#" style="font-size:0.8rem; color:var(--royal-red);">查看全部 ></a>
+                    </div>
+                    <div class="shop-grid">
+                        <!-- 商品 1-6 -->
+                        <div class="shop-item">
+                            <img src="折扣券.png" class="shop-img">
+                            <div class="shop-info">
+                                <div class="shop-name">满100元-20元御赐券</div>
+                                <div class="shop-price">200 通宝</div>
+                                <button class="shop-btn" onclick="redeemGift(200, '御赐券')">立即兑换</button>
+                            </div>
+                        </div>
+                        <div class="shop-item">
+                            <img src="帆布包.png" class="shop-img">
+                            <div class="shop-info">
+                                <div class="shop-name">“酥酥师傅”帆布包</div>
+                                <div class="shop-price">500 通宝</div>
+                                <button class="shop-btn" onclick="redeemGift(500, '帆布包')">立即兑换</button>
+                            </div>
+                        </div>
+                        <div class="shop-item">
+                            <img src="日历.jpg" class="shop-img">
+                            <div class="shop-info">
+                                <div class="shop-name">宫廷窗棂纹样日历</div>
+                                <div class="shop-price">800 通宝</div>
+                                <button class="shop-btn" onclick="redeemGift(800, '日历')">立即兑换</button>
+                            </div>
+                        </div>
+                        <div class="shop-item">
+                            <img src="茶具盘.jpg" class="shop-img">
+                            <div class="shop-info">
+                                <div class="shop-name">御用描金茶具盘</div>
+                                <div class="shop-price">2000 通宝</div>
+                                <button class="shop-btn" style="opacity:0.5; cursor:not-allowed;">积分不足</button>
+                            </div>
+                        </div>
+                         <div class="shop-item">
+                            <img src="盲盒.png" class="shop-img">
+                            <div class="shop-info">
+                                <div class="shop-name">南沙酥盲盒(随机)</div>
+                                <div class="shop-price">600 通宝</div>
+                                <button class="shop-btn" onclick="redeemGift(600, '盲盒')">立即兑换</button>
+                            </div>
+                        </div>
+                         <div class="shop-item">
+                            <img src="门票.png" class="shop-img">
+                            <div class="shop-info">
+                                <div class="shop-name">非遗体验课门票</div>
+                                <div class="shop-price">1500 通宝</div>
+                                <button class="shop-btn" onclick="redeemGift(1500, '体验课')">立即兑换</button>
+                            </div>
+                        </div>
+                        <div class="shop-item">
+                            <img src="折扇.png" class="shop-img">
+                            <div class="shop-info">
+                                <div class="shop-name">定制折扇(夏日限定)</div>
+                                <div class="shop-price">1000 通宝</div>
+                                <button class="shop-btn" onclick="redeemGift(1000, '折扇')">立即兑换</button>
+                            </div>
+                        </div>
+                        <div class="shop-item">
+                            <img src="邮票.png" class="shop-img">
+                            <div class="shop-info">
+                                <div class="shop-name">御制纪念邮票一套</div>
+                                <div class="shop-price">1200 通宝</div>
+                                <button class="shop-btn" onclick="redeemGift(1200, '邮票')">立即兑换</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 右栏：任务与榜单 (吸顶) -->
+            <aside class="sidebar-right">
+                <div class="panel">
+                    <div class="panel-title">积攒功德</div>
+                    <div class="task-card">
+                        <div>
+                            <h4 style="margin:0;">完善御膳档案</h4>
+                            <p style="margin:0; font-size:0.8rem; color:#888;">填写生日信息</p>
+                        </div>
+                        <button class="btn-do">+50</button>
+                    </div>
+                    <div class="task-card">
+                        <div>
+                            <h4 style="margin:0;">呈递品鉴奏折</h4>
+                            <p style="margin:0; font-size:0.8rem; color:#888;">发布带图好评</p>
+                        </div>
+                        <button class="btn-do">+50</button>
+                    </div>
+                    <div class="task-card">
+                        <div>
+                            <h4 style="margin:0;">广而告之</h4>
+                            <p style="margin:0; font-size:0.8rem; color:#888;">邀请好友注册</p>
+                        </div>
+                        <button class="btn-do">+100</button>
+                    </div>
+                </div>
+
+                <div class="panel" style="background:#9A3B3B; color:white; border:none;">
+                    <h3 style="margin-top:0; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:10px;">👑 功德榜</h3>
+                    <ol style="padding-left:20px; line-height:2;">
+                        <li>钮祜禄·甄嬛 <span style="float:right">9999</span></li>
+                        <li>爱吃酥的富察 <span style="float:right">8888</span></li>
+                        <li>御膳房小李子 <span style="float:right">7766</span></li>
+                    </ol>
+                </div>
+
+                <!-- 新品预告 (新增) -->
+                <div class="panel">
+                    <div class="panel-title">御膳房上新</div>
+                    <div class="preview-card">
+                        <img src="桂花酥.png" class="preview-img">
+                        <div class="preview-info">
+                            <h4 style="margin:0;">桂花糖藕酥</h4>
+                            <p style="font-size:0.8rem; opacity:0.8; margin:5px 0;">秋季限定，敬请期待</p>
+                            <button class="vote-btn">期待 +1</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <footer>
+        <div style="font-size: 1.5rem; color: var(--honey-gold); margin-bottom: 20px; font-weight: bold;">南沙酥</div>
+        <p>© 2025 平泉利发糖饼厂 | 河北省非物质文化遗产保护单位</p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileNav').classList.toggle('active');
+        }
+
+        let currentPoints = 888;
+        function redeemGift(cost, name) {
+            if (currentPoints >= cost) {
+                if(confirm(`确定消耗 ${cost} 通宝兑换【${name}】吗？`)) {
+                    currentPoints -= cost;
+                    document.querySelector('.points-num').innerText = currentPoints;
+                    alert(`兑换成功！内务府稍后将为您派送【${name}】。`);
+                }
+            } else {
+                alert("您的通宝不足，快去积攒功德吧！");
+            }
+        }
+    </script>
+</body>
+</html>

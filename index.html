@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南沙酥 | 御苑丹青 酥传百年</title>
+    <!-- SEO Optimization -->
+    <meta name="description" content="南沙酥 - 百年传承纯手工制作，宫廷匠心，非物质文化遗产。我们专注于提供最好的南沙原味、礼盒点心及特色文化体验。">
+    <meta name="keywords" content="南沙酥, 非遗点心, 宫廷糕点, 平泉小吃, 手工酥点, 中国传统糕点, 伴手礼, 万壑松风">
+    <meta name="author" content="南沙酥官方">
+    <!-- Open Graph for better sharing -->
+    <meta property="og:title" content="南沙酥 | 御苑丹青 酥传百年">
+    <meta property="og:description" content="百年传承纯手工制作，宫廷匠心，非物质文化遗产，御膳房点心局。">
+    <meta property="og:type" content="website">
+    <!-- SEO Optimization -->
+    <meta name="description" content="南沙酥 - 百年传承纯手工制作，宫廷匠心，非物质文化遗产。我们专注于提供最好的南沙原味、礼盒点心及特色文化体验。">
+    <meta name="keywords" content="南沙酥, 非遗点心, 宫廷糕点, 平泉小吃, 手工酥点, 中国传统糕点, 伴手礼, 万壑松风">
+    <meta name="author" content="南沙酥官方">
+    <!-- Open Graph for better sharing -->
+    <meta property="og:title" content="南沙酥 | 御苑丹青 酥传百年">
+    <meta property="og:description" content="百年传承纯手工制作，宫廷匠心，非物质文化遗产，御膳房点心局。">
+    <meta property="og:type" content="website">
+    <style>
+        /* =========================================
+           1. 核心配色与艺术纹理
+        ========================================= */
+        :root {
+            --royal-red: #9A3B3B;
+            --honey-gold: #C0A16B;
+            --rice-paper: #F7F4EF;
+            --ink-gray: rgba(60, 60, 60, 0.08);
+            --dark-text: #4A3F35;
+            --shadow: 0 8px 20px rgba(154, 59, 59, 0.15);
+        }
+
+        body {
+            margin: 0;
+            font-family: "Noto Serif SC", "Songti SC", serif;
+            background-color: var(--rice-paper);
+            color: var(--dark-text);
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(var(--ink-gray) 2px, transparent 2px),
+                radial-gradient(var(--ink-gray) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px;
+            background-position: 0 0, 25px 25px;
+        }
+
+        /* 布局修正 */
+        main {
+            padding-top: 120px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 80vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s ease;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* =========================================
+           2. 顶部导航 (已更新会员入口)
+        ========================================= */
+        header {
+            background: rgba(247, 244, 239, 0.98);
+            padding: 0 5%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-sizing: border-box;
+            border-bottom: 2px solid var(--honey-gold);
+            box-shadow: 0 4px 15px rgba(192, 161, 107, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--royal-red);
+            border: 3px double var(--honey-gold);
+            padding: 5px 18px;
+            border-radius: 4px;
+            letter-spacing: 3px;
+            background: white;
+        }
+
+        .desktop-nav {
+            display: flex;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .desktop-nav>li a {
+            font-weight: 500;
+            position: relative;
+        }
+
+        .desktop-nav>li a:hover {
+            color: var(--royal-red);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: white;
+            min-width: 170px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--honey-gold);
+            border-top: 3px solid var(--royal-red);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border-radius: 0 0 8px 8px;
+            z-index: 1001;
+        }
+
+        .desktop-nav>li:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .dropdown-menu li a:hover {
+            background: var(--rice-paper);
+            color: var(--royal-red);
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--royal-red);
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: var(--rice-paper);
+            border-left: 3px solid var(--honey-gold);
+            padding: 80px 30px;
+            transition: right 0.4s;
+            z-index: 999;
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav li a {
+            display: block;
+            padding: 15px 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(192, 161, 107, 0.3);
+        }
+
+        /* =========================================
+           3. 首页专属内容
+        ========================================= */
+        .hero-banner {
+            height: 65vh;
+            position: relative;
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            /* 强制全屏宽 */
+            background: linear-gradient(rgba(192, 161, 107, 0.3), rgba(154, 59, 59, 0.4)),
+                url('封面.png') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 80% 100%, 60% 92%, 40% 100%, 20% 92%, 0 100%);
+            margin-top: -40px;
+            /* 抵消部分 padding */
+        }
+
+        .hero-text {
+            background: rgba(168, 50, 50, 0.85);
+            padding: 40px 60px;
+            border: 2px solid var(--honey-gold);
+            box-shadow: 0 0 30px rgba(192, 161, 107, 0.5);
+            border-radius: 4px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin: 15px 0;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-royal {
+            background: linear-gradient(45deg, var(--honey-gold), #E0C392);
+            color: #5A3A1A;
+            font-weight: bold;
+            padding: 12px 45px;
+            border-radius: 50px;
+            margin-top: 25px;
+            display: inline-block;
+            border: 2px solid white;
+            box-shadow: 0 5px 15px rgba(192, 161, 107, 0.4);
+        }
+
+        .btn-royal:hover {
+            transform: translateY(-3px);
+        }
+
+        /* 祥云分割线 */
+        .cloud-divider {
+            height: 60px;
+            background-color: transparent;
+            background-image: radial-gradient(circle at 50% 100%, white 25px, transparent 26px),
+                radial-gradient(circle at 40% 100%, white 15px, transparent 16px),
+                radial-gradient(circle at 60% 100%, white 15px, transparent 16px);
+            background-size: 100px 60px;
+            background-repeat: repeat-x;
+            margin-top: -60px;
+            position: relative;
+            z-index: 2;
+            opacity: 0.9;
+        }
+
+        .showcase-section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.2rem;
+            color: var(--royal-red);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .art-card {
+            background: var(--rice-paper);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--honey-gold);
+            outline: 4px solid rgba(192, 161, 107, 0.1);
+            outline-offset: -8px;
+            transition: 0.4s;
+        }
+
+        .art-card:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .art-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            object-position: center center;
+        }
+
+        .card-content {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .tag-royal {
+            display: inline-block;
+            background: var(--royal-red);
+            color: var(--honey-gold);
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: #2A1F1F;
+            color: #999;
+            padding: 4rem 5%;
+            text-align: center;
+            border-top: 4px solid var(--honey-gold);
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+        }
+
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="index.html" class="logo">南沙酥</a>
+        <ul class="desktop-nav">
+            <li><a href="index.html" style="color:var(--royal-red);">首页·御苑</a></li>
+            <li>
+                <a href="products.html">御膳房·点心局 ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a href="products.html#gift">国潮礼盒 (赐礼)</a></li>
+                    <li><a href="products.html#daily">日常茶点 (自享)</a></li>
+                    <li><a href="products.html#health">轻盈养生 (清减)</a></li>
+                </ul>
+            </li>
+            <li><a href="story.html">百年·非遗志</a></li>
+            <li><a href="campaign.html">御苑·雅集</a></li>
+            <!-- 新增会员入口 -->
+            <li><a href="member.html">内务府·会员</a></li>
+        </ul>
+        <div class="mobile-toggle" onclick="toggleMobileMenu()">☰</div>
+    </header>
+
+    <div class="mobile-nav" id="mobileNav">
+        <ul>
+            <li><a href="index.html">🏠 首页·御苑</a></li>
+            <li><a href="products.html">🎁 御膳房·点心局</a></li>
+            <li><a href="story.html">📜 百年·非遗志</a></li>
+            <li><a href="campaign.html">🎏 御苑·雅集</a></li>
+            <li><a href="member.html">💎 内务府·会员</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <section class="hero-banner">
+            <div class="hero-text">
+                <p style="letter-spacing: 5px; color: var(--honey-gold); font-weight:bold;">— 宫廷匠心 · 水墨酥韵 —</p>
+                <h1>一口，穿越三百年</h1>
+                <a href="products.html" class="btn-royal">奉旨尝鲜</a>
+                <div style="margin-top: 15px; font-size: 0.9rem;">
+                    <a href="member.html" style="color: #E6CFA0; border-bottom: 1px dashed #E6CFA0;">领取内务府会员腰牌 &gt;</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="cloud-divider"></div>
+
+        <section class="showcase-section">
+            <h2 class="section-title">御赐·镇店三宝</h2>
+            <div class="card-grid">
+                <div class="art-card">
+                    <div style="position:relative;">
+                        <img src="南沙酥.png" alt="南沙原味·初见">
+                        <div style="position:absolute; top:15px; right:15px;" class="tag-royal">销量榜首</div>
+                    </div>
+
+                    <div class="card-content">
+                        <h3>南沙原味·初见</h3>
+                        <p style="color:#666; font-size:0.95rem; margin-bottom: 20px;">古法十八道工序，酥皮薄如蝉翼，入口即化。</p>
+                        <a href="products.html#daily" style="color:var(--royal-red); font-weight:bold;">查看详情 →</a>
+                    </div>
+                </div>
+
+                <div class="art-card">
+                    <div style="position:relative;">
+                        <img src="包装.png" alt="万壑松风·礼盒">
+                        <div style="position:absolute; top:15px; right:15px;" class="tag-royal">送礼御品</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>万壑松风·礼盒</h3>
+                        <p style="color:#666; font-size:0.95rem; margin-bottom: 20px;">宫廷窗棂纹样设计，承载厚重祥瑞之意。</p>
+                        <a href="products.html#gift" style="color:var(--royal-red); font-weight:bold;">查看详情 →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div style="font-size: 1.5rem; color: var(--honey-gold); margin-bottom: 20px; font-weight: bold;">南沙酥</div>
+        <p>© 2025 平泉利发糖饼厂 | 河北省非物质文化遗产保护单位</p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileNav').classList.toggle('active');
+        }
+    </script>
+</body>
+
+</html>

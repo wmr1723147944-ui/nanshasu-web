@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>御苑雅集 | 活动专区</title>
+    <style>
+        :root {
+            --royal-red: #9A3B3B; --honey-gold: #C0A16B; --rice-paper: #F7F4EF;
+            --ink-gray: rgba(60, 60, 60, 0.08); --dark-text: #4A3F35;
+            --shadow: 0 8px 20px rgba(154, 59, 59, 0.15);
+        }
+        body {
+            margin: 0; 
+            font-family: "Noto Serif SC", serif;
+            color: var(--dark-text); 
+            overflow-x: hidden;
+            
+            /* ▼▼▼▼▼ 背景图核心设置 ▼▼▼▼▼ */
+            /* 替换为你保存的图片路径 */
+            background-image: url('bg-decoration.png'); 
+            
+            /* 让背景图固定不动，产生高级的视差滚动效果 */
+            background-attachment: fixed; 
+            
+            /* 让图片铺满屏幕，并居中显示 */
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            /* ▲▲▲▲▲ 设置结束 ▲▲▲▲▲ */
+        }
+        
+       main { 
+            padding-top: 40px; /* 调整一下内边距 */
+            width: 90%; 
+            max-width: 1000px; 
+            margin: 120px auto 100px; /* 保持居中 */
+            
+            /* ▼▼▼▼▼ 新增：内容区白底设置 ▼▼▼▼▼ */
+            /* 使用米纸色作为底色，遮住背景图中间的部分 */
+            background-color: rgba(247, 244, 239, 0.95); 
+            
+            /* 加一点阴影，让内容区看起来是浮在背景图上的 */
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            
+            /* 给内容区内部加点呼吸空间 */
+            padding: 40px;
+            border-radius: 8px; /*稍微加点圆角更柔和*/
+            /* ▲▲▲▲▲ 设置结束 ▲▲▲▲▲ */
+        }
+
+
+        a { text-decoration: none; color: inherit; transition: 0.4s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* ▼▼▼▼▼▼ 复制这段样式，修复导航栏 ▼▼▼▼▼▼ */
+        header {
+            background: rgba(247, 244, 239, 0.98); 
+            padding: 0 5%; 
+            height: 80px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000;
+            border-bottom: 2px solid var(--honey-gold); 
+            box-shadow: 0 4px 15px rgba(192, 161, 107, 0.2); 
+            box-sizing: border-box;
+        }
+
+        .logo { 
+            font-size: 1.8rem; 
+            font-weight: bold; 
+            color: var(--royal-red); 
+            border: 3px double var(--honey-gold); 
+            padding: 5px 18px; 
+            border-radius: 4px; 
+            letter-spacing: 3px; 
+            background: white; 
+        }
+
+        .desktop-nav { display: flex; gap: 35px; align-items: center; }
+        .desktop-nav > li { position: relative; } /* 关键：确保下拉菜单位置对齐 */
+        .desktop-nav > li a { font-weight: 500; transition: 0.3s; }
+        .desktop-nav > li a:hover { color: var(--royal-red); }
+
+        /* ▼ 下拉菜单的核心样式（你之前缺少的） ▼ */
+        .dropdown-menu { 
+            position: absolute; 
+            top: 100%; 
+            left: 50%; 
+            transform: translateX(-50%) translateY(10px); 
+            background: white; 
+            min-width: 170px; 
+            box-shadow: var(--shadow); 
+            border: 1px solid var(--honey-gold); 
+            border-top: 3px solid var(--royal-red); 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: 0.3s; 
+            border-radius: 0 0 8px 8px; 
+            z-index: 1001; 
+        }
+        
+        .desktop-nav > li:hover .dropdown-menu { 
+            opacity: 1; 
+            visibility: visible; 
+            transform: translateX(-50%) translateY(0); 
+        }
+        
+        .dropdown-menu li a { 
+            display: block; 
+            padding: 12px 20px; 
+            font-size: 0.95rem; 
+            border-bottom: 1px dashed #eee; 
+            color: var(--dark-text) !important; /* 强制下拉菜单文字平时是深色 */
+        }
+        .dropdown-menu li a:hover {
+            background: var(--rice-paper);
+            color: var(--royal-red) !important;
+        }
+        /* ▲▲▲▲▲▲ 样式结束 ▲▲▲▲▲▲ */
+        .mobile-toggle { display: none; font-size: 1.8rem; color: var(--royal-red); cursor: pointer; }
+        
+        .mobile-nav { position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100vh; background: var(--rice-paper); border-left: 3px solid var(--honey-gold); padding: 80px 30px; transition: 0.4s; z-index: 999; }
+        .mobile-nav.active { right: 0; }
+        .mobile-nav li a { display: block; padding: 15px 0; border-bottom: 1px solid rgba(192, 161, 107, 0.3); }
+
+        .page-title { text-align: center; margin-bottom: 60px; }
+        .page-title h1 { font-size: 2.8rem; color: var(--royal-red); margin: 0; text-shadow: 2px 2px 0px rgba(192, 161, 107, 0.3); }
+        .page-title p { color: var(--honey-gold); font-weight: bold; letter-spacing: 2px; margin-top: 10px; }
+
+        .event-card { background: white; border-radius: 12px; overflow: hidden; margin-bottom: 60px; box-shadow: var(--shadow); border: 1px solid var(--honey-gold); position: relative; display: flex; flex-wrap: wrap; }
+        .seal-mark { position: absolute; top: -10px; right: 20px; width: 60px; height: 60px; background: var(--royal-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transform: rotate(15deg); z-index: 10; }
+        .event-img { flex: 1; min-width: 300px; height: 350px; object-fit: contain;background-color: #FFF9E5; border-right: 4px solid var(--honey-gold); }
+        .event-info { flex: 1; padding: 40px; min-width: 300px; background-image: radial-gradient(var(--honey-gold) 0.5px, transparent 0.5px); background-size: 20px 20px; }
+        .event-tag { background: var(--honey-gold); color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; display: inline-block; margin-bottom: 15px; }
+        .event-info h2 { color: var(--royal-red); font-size: 1.8rem; margin: 0 0 15px 0; }
+        .btn-action { background: var(--royal-red); color: white; padding: 12px 30px; border-radius: 50px; border: none; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 10px rgba(154, 59, 59, 0.3); transition: 0.3s; display: inline-block; }
+        .btn-action:hover { background: #7a2b2b; transform: translateY(-2px); }
+        .countdown { display: flex; gap: 15px; margin-bottom: 25px; }
+        .time-box { text-align: center; border: 1px solid var(--honey-gold); padding: 5px 10px; border-radius: 4px; color: var(--royal-red); }
+        .time-box span { display: block; font-weight: bold; font-size: 1.2rem; }
+
+        footer { background: #2A1F1F; color: #999; padding: 4rem 5%; text-align: center; border-top: 4px solid var(--honey-gold); width: 100vw; margin-left: calc(-50vw + 50%); }
+        @media (max-width: 768px) { .desktop-nav { display: none; } .mobile-toggle { display: block; } .event-card { flex-direction: column; } .event-img { width: 100%; height: 200px; border-right: none; border-bottom: 4px solid var(--honey-gold); } }
+    </style>
+</head>
+<body>
+    <header>
+    <a href="index.html" class="logo">南沙酥</a>
+    <ul class="desktop-nav">
+        <li><a href="index.html">首页·御苑</a></li>
+        
+        <li>
+            <a href="products.html">御膳房·点心局 ▾</a>
+            <ul class="dropdown-menu">
+                <li><a href="products.html#gift">国潮礼盒 (赐礼)</a></li>
+                <li><a href="products.html#daily">日常茶点 (自享)</a></li>
+                <li><a href="products.html#health">轻盈养生 (清减)</a></li>
+            </ul>
+        </li>
+        <li><a href="story.html">百年·非遗志</a></li>
+        
+        <li><a href="campaign.html" style="color:var(--royal-red);">御苑·雅集</a></li>
+        
+        <li><a href="member.html">内务府·会员</a></li>
+    </ul>
+    <div class="mobile-toggle" onclick="toggleMobileMenu()">☰</div>
+</header>
+
+    <div class="mobile-nav" id="mobileNav">
+        <ul>
+            <li><a href="index.html">🏠 首页·御苑</a></li>
+            <li><a href="products.html">🎁 御膳房·点心局</a></li>
+            <li><a href="story.html">📜 百年·非遗志</a></li>
+            <li><a href="campaign.html">🎏 御苑·雅集 (活动)</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <div class="page-title">
+            <h1>御苑 · 雅集</h1>
+            <p>— 跟随酥酥师傅，玩转非遗国潮 —</p>
+        </div>
+
+        <div class="event-card">
+            <div class="seal-mark">火热<br>进行</div>
+            <img src="酥创达人.png" class="event-img" alt="挑战赛海报">
+            <div class="event-info">
+                <div class="event-tag">线上活动 · 抖音/小红书</div>
+                <h2>全网寻找“酥创达人”</h2>
+                <p>发挥你的脑洞！用南沙酥制作创意吃法（如：南沙酥配冰淇淋、酥皮奶盖茶）。带话题 <strong>#南沙酥创意吃法#</strong> 发布视频，点赞前十名送全年免费酥券！</p>
+                <div class="countdown">
+                    <div class="time-box"><span>05</span><small>天</small></div>
+                    <div class="time-box"><span>12</span><small>时</small></div>
+                    <div class="time-box"><span>30</span><small>分</small></div>
+                </div>
+                <a href="#" class="btn-action">👉 立即上传作品</a>
+            </div>
+        </div>
+
+        <div class="event-card">
+            <div class="seal-mark" style="background:var(--honey-gold);">限时<br>探店</div>
+            <img src="快闪.png" class="event-img" alt="快闪店效果图">
+            <div class="event-info">
+                <div class="event-tag">线下快闪 · 承德避暑山庄站</div>
+                <h2>“酥宫夜宴” 国潮快闪店</h2>
+                <p>穿越回清朝御膳房！现场体验古法“水面包酥面”技艺，与“酥酥师傅”人偶合影，更有“圣旨”优惠券限量发放。</p>
+                <p style="font-size:0.9rem; border-left:3px solid var(--royal-red); padding-left:10px; background:rgba(255,255,255,0.8);">
+                    📍 地点：承德市双桥区丽正门大街<br>
+                    📅 时间：2025.10.01 - 10.07
+                </p>
+                <br>
+                <a href="#" class="btn-action">🗺️ 查看地图导航</a>
+            </div>
+        </div>
+
+        <div class="event-card">
+            <div class="seal-mark" style="background:#4A3F35;">预约<br>开启</div>
+            <img src="https://placehold.co/600x800/eee/333?text=Workshop" class="event-img" alt="工坊照片">
+            <div class="event-info">
+                <div class="event-tag">亲子/研学 · 非遗传承</div>
+                <h2>小小御厨 · 手作体验课</h2>
+                <p>由非遗传承人手把手教学，亲手制作一枚属于你的南沙酥。完成课程可获得“非遗小匠人”证书及定制围裙。</p>
+                <p style="color:var(--royal-red); font-weight:bold;">¥168 / 组（一大一小）</p>
+                <br>
+                <a href="#" class="btn-action">📅 在线预约课程</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div style="font-size: 1.5rem; color: var(--honey-gold); margin-bottom: 20px; font-weight: bold;">南沙酥</div>
+        <p>© 2025 平泉利发糖饼厂 | 河北省非物质文化遗产保护单位</p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileNav').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

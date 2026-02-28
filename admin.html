@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南沙酥 | 内务府数据总览</title>
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <style>
+        /* =========================================
+           1. 核心配色与艺术纹理 (复用官方样式)
+        ========================================= */
+        :root {
+            --royal-red: #9A3B3B;
+            --honey-gold: #C0A16B;
+            --rice-paper: #F7F4EF;
+            --ink-gray: rgba(60, 60, 60, 0.08);
+            --dark-text: #4A3F35;
+            --shadow: 0 8px 20px rgba(154, 59, 59, 0.15);
+            --card-bg: rgba(255, 255, 255, 0.85);
+        }
+
+        body {
+            margin: 0;
+            font-family: "Noto Serif SC", "Songti SC", serif;
+            background-color: var(--rice-paper);
+            color: var(--dark-text);
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(var(--ink-gray) 2px, transparent 2px),
+                radial-gradient(var(--ink-gray) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px;
+            background-position: 0 0, 25px 25px;
+            display: none;
+            /* 初始隐藏，鉴权后显示 */
+        }
+
+        /* =========================================
+           2. 顶部导航 (精简版)
+        ========================================= */
+        header {
+            background: rgba(247, 244, 239, 0.98);
+            padding: 0 5%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-sizing: border-box;
+            border-bottom: 2px solid var(--honey-gold);
+            box-shadow: 0 4px 15px rgba(192, 161, 107, 0.2);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--royal-red);
+            border: 2px double var(--honey-gold);
+            padding: 4px 12px;
+            border-radius: 4px;
+            letter-spacing: 2px;
+            background: white;
+            text-decoration: none;
+        }
+
+        .admin-title {
+            font-size: 1.2rem;
+            color: var(--dark-text);
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-title::before {
+            content: '殿';
+            display: inline-block;
+            background: var(--royal-red);
+            color: var(--honey-gold);
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            border-radius: 50%;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid var(--royal-red);
+            color: var(--royal-red);
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .logout-btn:hover {
+            background: var(--royal-red);
+            color: white;
+        }
+
+
+        /* =========================================
+           3. 数据面板布局
+        ========================================= */
+        main {
+            padding-top: 100px;
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 80vh;
+            padding-bottom: 50px;
+        }
+
+        /* 核心指标卡片 */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border: 1px solid var(--honey-gold);
+            border-top: 4px solid var(--royal-red);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 卡片水印装饰 */
+        .metric-card::after {
+            content: '印';
+            position: absolute;
+            bottom: -20px;
+            right: -10px;
+            font-size: 80px;
+            color: rgba(192, 161, 107, 0.1);
+            font-family: "楷体", serif;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .metric-title {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--royal-red);
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .metric-trend {
+            font-size: 0.85rem;
+            color: #3b8c3b;
+            /* 默认涨幅颜色 */
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .metric-trend.down {
+            color: #d14b4b;
+        }
+
+        /* 图表区域 */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 992px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            border: 1px solid var(--honey-gold);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-header {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(192, 161, 107, 0.4);
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--dark-text);
+        }
+
+        .chart-box {
+            width: 100%;
+            height: 350px;
+        }
+
+
+        /* =========================================
+           4. 页脚
+        ========================================= */
+        footer {
+            background: #2A1F1F;
+            color: #999;
+            padding: 2rem 5%;
+            text-align: center;
+            border-top: 3px solid var(--honey-gold);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 鉴权脚本：必须放在 body 最前面 -->
+    <script>
+        // 简易前端鉴权（防御性弱，仅作静态页面原型演示）
+        const PASSCODE = 'nansha888';
+
+        function checkAuth() {
+            // 检查 session 是否已登录
+            if (sessionStorage.getItem('adminAuth') === 'true') {
+                document.body.style.display = 'block';
+                return;
+            }
+
+            // 未登录，弹窗询问密码
+            const input = prompt('【内务府机要重地】\n闲杂人等退避。请输入查阅密令：');
+
+            if (input === PASSCODE) {
+                // 密码正确，存入 session 并显示页面
+                sessionStorage.setItem('adminAuth', 'true');
+                alert('密令核验无误。恭候大人阅览数据。');
+                document.body.style.display = 'block';
+                initCharts(); // 只有验证通过才初始化图表
+            } else {
+                // 密码错误，遣返首页
+                alert('密令错误！胆敢擅闯内务府，来人啊，打回原籍！');
+                window.location.href = 'index.html';
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminAuth');
+            window.location.href = 'index.html';
+        }
+
+        // 页面加载立即执行鉴权
+        checkAuth();
+    </script>
+
+    <header>
+        <a href="index.html" class="logo">南沙酥</a>
+        <div class="admin-title">内务府 · 顾客数据总览 (机密)</div>
+        <button class="logout-btn" onclick="logout()">退出微服</button>
+    </header>
+
+    <main>
+        <!-- 四大核心指标 -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-title">今日殿前访客 (UV)</div>
+                <div class="metric-value">3,452</div>
+                <div class="metric-trend"><span style="font-size:1.2em">↑</span> 较昨日增加 12.5%</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-title">客官平均驻留时长</div>
+                <div class="metric-value">04:15</div>
+                <div class="metric-trend down"><span style="font-size:1.2em">↓</span> 较昨日减少 00:20</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-title">御膳房转化率 (下单率)</div>
+                <div class="metric-value">16.8%</div>
+                <div class="metric-trend"><span style="font-size:1.2em">↑</span> 较昨日增加 2.1%</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-title">本月累计赏银 (预估金币)</div>
+                <div class="metric-value">¥89,200</div>
+                <div class="metric-trend"><span style="font-size:1.2em">↑</span> 势头良好稳步上升</div>
+            </div>
+        </div>
+
+        <!-- 图表分析区 -->
+        <div class="charts-grid">
+            <!-- 左侧：访问趋势折线图 -->
+            <div class="chart-container">
+                <div class="chart-header">近七日香客访问趋势及驻留时长</div>
+                <div id="trendChart" class="chart-box"></div>
+            </div>
+
+            <!-- 右侧：热销单品饼图 -->
+            <div class="chart-container">
+                <div class="chart-header">各宫热销酥点销售占比</div>
+                <div id="pieChart" class="chart-box"></div>
+            </div>
+        </div>
+
+        <!-- 底部大图表：转化漏斗 或 访问来源 -->
+        <div class="charts-grid" style="grid-template-columns: 1fr; margin-top: 25px;">
+            <div class="chart-container">
+                <div class="chart-header">客官访问来源分布 (引流渠道分析)</div>
+                <div id="barChart" class="chart-box" style="height: 300px;"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>© 2025 平泉利发糖饼厂 | 内务府机要数据，严禁外传</p>
+    </footer>
+
+    <!-- 图表初始化脚本 -->
+    <script>
+        function initCharts() {
+            // 定义宫廷风通用颜色盘
+            const royalColors = ['#9A3B3B', '#C0A16B', '#D48C70', '#5c6e58', '#4A3F35'];
+
+            // 1. 初始化折线图 (近七日趋势)
+            const trendChart = echarts.init(document.getElementById('trendChart'));
+            trendChart.setOption({
+                color: royalColors,
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'cross' }
+                },
+                legend: {
+                    data: ['访问人数(UV)', '停留时长(秒)'],
+                    bottom: 0
+                },
+                grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['子鼠', '丑牛', '寅虎', '卯兔', '辰龙', '巳蛇', '午马'], // 用干支纪日模拟近7天
+                        axisPointer: { type: 'shadow' }
+                    }
+                ],
+                yAxis: [
+                    { type: 'value', name: '人次', min: 0, max: 5000, interval: 1000 },
+                    { type: 'value', name: '时长(s)', min: 0, max: 600, interval: 120 }
+                ],
+                series: [
+                    {
+                        name: '访问人数(UV)',
+                        type: 'bar',
+                        barWidth: '40%',
+                        data: [2100, 2400, 1800, 3200, 3800, 2900, 3452],
+                        itemStyle: { borderRadius: [4, 4, 0, 0] }
+                    },
+                    {
+                        name: '停留时长(秒)',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        smooth: true,
+                        symbolSize: 8,
+                        lineStyle: { width: 3, shadowColor: 'rgba(0,0,0,0.3)', shadowBlur: 10 },
+                        data: [150, 210, 180, 280, 310, 240, 255]
+                    }
+                ]
+            });
+
+            // 2. 初始化饼图 (产品占比)
+            const pieChart = echarts.init(document.getElementById('pieChart'));
+            pieChart.setOption({
+                color: royalColors,
+                tooltip: { trigger: 'item', formatter: '{a} <br/>{b} : {c} ({d}%)' },
+                legend: { bottom: 0, left: 'center' },
+                series: [
+                    {
+                        name: '御膳销量',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+                        label: { show: false, position: 'center' },
+                        emphasis: {
+                            label: { show: true, fontSize: '18', fontWeight: 'bold' }
+                        },
+                        labelLine: { show: false },
+                        data: [
+                            { value: 1048, name: '南沙原味' },
+                            { value: 735, name: '万壑松风礼盒' },
+                            { value: 580, name: '桂花伴月' },
+                            { value: 484, name: '养生山药酥' },
+                            { value: 300, name: '文创盲盒' }
+                        ]
+                    }
+                ]
+            });
+
+            // 3. 初始化柱状图 (来源分布)
+            const barChart = echarts.init(document.getElementById('barChart'));
+            barChart.setOption({
+                color: [royalColors[1]], // 用金黄色
+                tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                xAxis: {
+                    type: 'value',
+                    boundaryGap: [0, 0.01]
+                },
+                yAxis: {
+                    type: 'category',
+                    data: ['知乎文章', '微信朋友圈', '小红书种草', 'B站视频', '微信公众号推文', '搜索引擎(直接搜)']
+                },
+                series: [
+                    {
+                        name: '访问来源',
+                        type: 'bar',
+                        data: [120, 302, 530, 890, 1040, 1620],
+                        itemStyle: { borderRadius: [0, 4, 4, 0] }
+                    }
+                ]
+            });
+
+            // 监听窗口大小改变，自适应图表
+            window.addEventListener('resize', () => {
+                trendChart.resize();
+                pieChart.resize();
+                barChart.resize();
+            });
+        }
+    </script>
+</body>
+
+</html>

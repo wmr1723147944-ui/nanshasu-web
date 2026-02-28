@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>御膳房点心局 | 南沙酥</title>
+    <style>
+        :root {
+            --royal-red: #9A3B3B; --honey-gold: #C0A16B; --rice-paper: #F7F4EF;
+            --ink-gray: rgba(60, 60, 60, 0.08); --dark-text: #4A3F35;
+            --shadow: 0 8px 20px rgba(154, 59, 59, 0.15);
+        }
+        body {
+            margin: 0; 
+            font-family: "Noto Serif SC", serif;
+            color: var(--dark-text); 
+            overflow-x: hidden;
+            
+            /* ▼▼▼▼▼ 背景图核心设置 ▼▼▼▼▼ */
+            /* 替换为你保存的图片路径 */
+            background-image: url('bg-decoration.png'); 
+            
+            /* 让背景图固定不动，产生高级的视差滚动效果 */
+            background-attachment: fixed; 
+            
+            /* 让图片铺满屏幕，并居中显示 */
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            /* ▲▲▲▲▲ 设置结束 ▲▲▲▲▲ */
+        }
+        
+       main { 
+            padding-top: 40px; /* 调整一下内边距 */
+            width: 90%; 
+            max-width: 1000px; 
+            margin: 120px auto 100px; /* 保持居中 */
+            
+            /* ▼▼▼▼▼ 新增：内容区白底设置 ▼▼▼▼▼ */
+            /* 使用米纸色作为底色，遮住背景图中间的部分 */
+            background-color: rgba(247, 244, 239, 0.95); 
+            
+            /* 加一点阴影，让内容区看起来是浮在背景图上的 */
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            
+            /* 给内容区内部加点呼吸空间 */
+            padding: 40px;
+            border-radius: 8px; /*稍微加点圆角更柔和*/
+            /* ▲▲▲▲▲ 设置结束 ▲▲▲▲▲ */
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.4s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        header {
+            background: rgba(247, 244, 239, 0.98); padding: 0 5%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            border-bottom: 2px solid var(--honey-gold); box-shadow: 0 4px 15px rgba(192, 161, 107, 0.2); box-sizing: border-box;
+        }
+        .logo { font-size: 1.8rem; font-weight: bold; color: var(--royal-red); border: 3px double var(--honey-gold); padding: 5px 18px; border-radius: 4px; letter-spacing: 3px; background: white; }
+        .desktop-nav { display: flex; gap: 35px; align-items: center; }
+        .desktop-nav > li a:hover { color: var(--royal-red); }
+        .dropdown-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(10px); background: white; min-width: 170px; box-shadow: var(--shadow); border: 1px solid var(--honey-gold); border-top: 3px solid var(--royal-red); opacity: 0; visibility: hidden; transition: 0.3s; border-radius: 0 0 8px 8px; z-index: 1001; }
+        .desktop-nav > li:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .dropdown-menu li a { display: block; padding: 12px 20px; font-size: 0.95rem; border-bottom: 1px dashed #eee; }
+        
+        .mobile-toggle { display: none; font-size: 1.8rem; color: var(--royal-red); cursor: pointer; }
+        .mobile-nav { position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100vh; background: var(--rice-paper); border-left: 3px solid var(--honey-gold); padding: 80px 30px; transition: 0.4s; z-index: 999; }
+        .mobile-nav.active { right: 0; }
+        .mobile-nav li a { display: block; padding: 15px 0; border-bottom: 1px solid rgba(192, 161, 107, 0.3); }
+
+        .page-header { text-align: center; margin-bottom: 40px; padding: 20px; background: linear-gradient(to bottom, rgba(192, 161, 107, 0.1), transparent); border-radius: 8px; }
+        .category-title { display: flex; align-items: center; margin: 60px 0 30px; font-size: 1.8rem; color: var(--dark-text); }
+        .category-title::before { content: ''; display: inline-block; width: 6px; height: 30px; background: var(--royal-red); margin-right: 15px; border-radius: 4px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .product-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid #eee; transition: 0.3s; }
+        .product-card:hover { transform: translateY(-5px); border-color: var(--honey-gold); }
+        .product-card img {
+            width: 100%;            /* 强制宽度占满卡片，消除左右白边 */
+            height: 260px;          /* 强制高度统一，消除上下对不齐 */
+            object-fit: cover;      /* 智能裁剪，防止图片变形 */
+            border-bottom: 1px solid #eee; /* 可选：给图片底部加一条淡淡的分隔线 */
+        }
+        .p-info { padding: 20px; }
+        .p-price { color: var(--royal-red); font-size: 1.2rem; font-weight: bold; float: right; }
+        .p-btn { display: block; width: 100%; padding: 10px; margin-top: 15px; background: var(--honey-gold); color: white; text-align: center; border-radius: 4px; border: none; cursor: pointer; }
+        .p-btn:hover { background: var(--royal-red); }
+
+        footer { background: #2A1F1F; color: #999; padding: 4rem 5%; text-align: center; border-top: 4px solid var(--honey-gold); width: 100vw; margin-left: calc(-50vw + 50%); }
+        @media (max-width: 768px) { .desktop-nav { display: none; } .mobile-toggle { display: block; } }
+    </style>
+</head>
+<body>
+    <header>
+    <a href="index.html" class="logo">南沙酥</a>
+    <ul class="desktop-nav">
+        <li><a href="index.html">首页·御苑</a></li>
+        
+        <li>
+            <a href="products.html" style="color:var(--royal-red);">御膳房·点心局 ▾</a>
+            <ul class="dropdown-menu">
+                <li><a href="products.html#gift">国潮礼盒 (赐礼)</a></li>
+                <li><a href="products.html#daily">日常茶点 (自享)</a></li>
+                <li><a href="products.html#health">轻盈养生 (清减)</a></li>
+            </ul>
+        </li>
+        <li><a href="story.html">百年·非遗志</a></li>
+        <li><a href="campaign.html">御苑·雅集</a></li>
+        <li><a href="member.html">内务府·会员</a></li>
+    </ul>
+    <div class="mobile-toggle" onclick="toggleMobileMenu()">☰</div>
+</header>
+
+    <div class="mobile-nav" id="mobileNav">
+        <ul>
+            <li><a href="index.html">🏠 首页·御苑</a></li>
+            <li><a href="products.html">🎁 御膳房·点心局</a></li>
+            <li><a href="story.html">📜 百年·非遗志</a></li>
+            <li><a href="campaign.html">🎏 御苑·雅集</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <div class="page-header">
+            <h1 style="color:var(--royal-red); margin-bottom:10px;">御膳房 · 点心局</h1>
+            <p style="color:#666;">— 宫廷选料 · 古法手作 —</p>
+        </div>
+
+        <div id="gift">
+            <h2 class="category-title">国潮礼盒系列 (赐礼)</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="礼盒.png" >
+                    <div class="p-info">
+                        <span class="p-price">¥128</span>
+                        <h3>万壑松风·礼盒</h3>
+                        <p style="color:#666; font-size:0.9rem;">内含5种口味，赠送日历。</p>
+                        <button class="p-btn">加入御膳单</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="全家福.jpg">
+                    <div class="p-info">
+                        <span class="p-price">¥168</span>
+                        <h3>宫廷·全家福</h3>
+                        <p style="color:#666; font-size:0.9rem;">周边礼品，好用精美。</p>
+                        <button class="p-btn">加入御膳单</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="daily">
+            <h2 class="category-title">日常自享系列 (自用)</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="日常.png">
+                    <div class="p-info">
+                        <span class="p-price">¥39</span>
+                        <h3>南沙原味·简装</h3>
+                        <p style="color:#666; font-size:0.9rem;">经典味道，下午茶必备。</p>
+                        <button class="p-btn">加入御膳单</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="health">
+            <h2 class="category-title">轻盈养生系列 (清减)</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="养生.png">
+                    <div class="p-info">
+                        <span class="p-price">¥55</span>
+                        <h3>低糖全麦·南沙酥</h3>
+                        <p style="color:#666; font-size:0.9rem;">0蔗糖添加，富含膳食纤维。</p>
+                        <button class="p-btn">加入御膳单</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div style="font-size: 1.5rem; color: var(--honey-gold); margin-bottom: 20px; font-weight: bold;">南沙酥</div>
+        <p>© 2025 平泉利发糖饼厂 | 河北省非物质文化遗产保护单位</p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileNav').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
