@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>南沙酥 | 内务府数据总览</title>
-    <!-- 引入 ECharts -->
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <!-- 引入 ECharts (使用国内稳定 CDN) -->
+    <script src="https://cdn.staticfile.net/echarts/5.5.0/echarts.min.js"></script>
     <style>
         /* =========================================
            1. 核心配色与艺术纹理 (复用官方样式)
@@ -312,7 +312,7 @@
                 sessionStorage.setItem('adminAuth', 'true');
                 alert('密令核验无误。恭候大人阅览数据。');
                 document.body.style.display = 'block';
-                initCharts(); // 只有验证通过才初始化图表
+                // 注意：此处不再同步调用 initCharts，交由页面底部的脚本安全执行
             } else {
                 // 密码错误，遣返首页
                 alert('密令错误！胆敢擅闯内务府，来人啊，打回原籍！');
@@ -598,7 +598,24 @@
                 barChart.resize();
                 revenueLineChart.resize();
             });
+
+            // 终极杀招：为了防止 body 从 display:none 变 block 的瞬间宽度为 0 导致画笔不工作
+            // 在图表初始化完毕后的半秒钟，强制所有图表根据当前真实的浏览器尺寸重新刷一遍图。
+            setTimeout(() => {
+                trendChart.resize();
+                pieChart.resize();
+                barChart.resize();
+                revenueLineChart.resize();
+            }, 500);
         }
+
+        // 修改点：确保页面所有 DOM 结构都加载完毕后，且通过了鉴权，再安稳地初始化图表
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('adminAuth') === 'true') {
+                // 稍微延迟，让 display:block 的排版计算跑完
+                setTimeout(initCharts, 300);
+            }
+        });
     </script>
 </body>
 
