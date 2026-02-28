@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>南沙酥 | 内务府数据总览</title>
-    <!-- 引入 ECharts (使用国内稳定 CDN) -->
-    <script src="https://cdn.staticfile.net/echarts/5.5.0/echarts.min.js"></script>
     <style>
         /* =========================================
            1. 核心配色与艺术纹理 (复用官方样式)
@@ -453,6 +451,9 @@
     <footer>
         <p>© 2025 平泉利发糖饼厂 | 内务府机要数据，严禁外传</p>
     </footer>
+
+    <!-- 移至底部的 ECharts 库，并加上 defer 以太极心法不阻塞页面渲染及密码弹窗 -->
+    <script src="https://cdn.staticfile.net/echarts/5.5.0/echarts.min.js" defer></script>
 
     <!-- 图表初始化脚本 -->
     <script>
